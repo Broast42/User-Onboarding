@@ -1,7 +1,7 @@
 import React from 'react';
 import { withFormik, Form, Field } from 'formik'; 
 import * as Yup from 'yup';
-// import axios from 'axios';
+import axios from 'axios';
 import styled from 'styled-components';
 
 const FlexDiv = styled.div`
@@ -58,8 +58,18 @@ const Forms = withFormik({
         tos: Yup.boolean().oneOf([true],"You must accept the terms of service."),
     }),
 
-    handleSubmit(values){
-        console.log(values);
+    handleSubmit(values, { setStatus, resetForm }){
+        console.log("values from submit",values);
+
+        axios
+            .post("https://reqres.in/api/users", values)
+            .then(res => {
+                console.log("Post success", res);
+                resetForm();
+            })
+            .catch(err =>{
+                console.log("Post Error:", err.response);
+            });
     }
 
 })(FormFields);
